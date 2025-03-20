@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hack_river/state/counter_action_state.dart';
+import 'package:hack_river/state/counter_family_state.dart';
 import 'package:hack_river/state/counter_state.dart';
 
 void main() {
@@ -27,9 +28,13 @@ class CounterPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    void onPressed() {
+    void onPressedDefault() {
       //TODO: watch, read, listen 차이
       ref.read(counterActionProvider.notifier).increment();
+    }
+
+    void onPressedFamily(int arg) {
+      ref.read(counterFamilyProvider(arg).notifier).increment();
     }
 
     final int count = ref.watch(counterProvider);
@@ -62,17 +67,37 @@ class CounterPage extends ConsumerWidget {
                   'watch 횟수 : $count',
                   style: Theme.of(context).textTheme.headlineMedium,
                 ),
-                Text(
-                  count.toString(),
-                  style: Theme.of(context).textTheme.headlineMedium,
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('family 횟수 : ${ref.watch(counterFamilyProvider(1))}',
+                        style: Theme.of(context).textTheme.headlineMedium),
+                    MaterialButton(
+                      onPressed: () => onPressedFamily(1),
+                      child: const Text('family 1 증가'),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text('family 횟수 : ${ref.watch(counterFamilyProvider(2))}',
+                        style: Theme.of(context).textTheme.headlineMedium),
+                    MaterialButton(
+                      onPressed: () => onPressedFamily(2),
+                      child: const Text('family 2 증가'),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
         ),
         floatingActionButton: FloatingActionButton(
-          onPressed: onPressed,
-          tooltip: '증가',
+          onPressed: onPressedDefault,
+          tooltip: '기본 증가',
           child: const Icon(Icons.add),
         ), // This trailing comma makes auto-formatting nicer for build methods.
       ),
