@@ -1,10 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-final counterProvider = NotifierProvider<CounterNotifier, int>(
+//TODO: autoDispose 와 일반 notifierProvider의 차이
+//TODO: autodispose, keepAlive
+final counterProvider = NotifierProvider.autoDispose<CounterNotifier, int>(
   CounterNotifier.new,
 );
 
-class CounterNotifier extends Notifier<int> {
+class CounterNotifier extends AutoDisposeNotifier<int> {
   @override
   int build() => 0; // 초기값
 
